@@ -2,7 +2,7 @@ package day.day01
 
 import helpers.ReadFile
 
-val alphaRegex = "[a-zA-Z]".toRegex()
+private val alphaRegex = "[a-zA-Z]".toRegex()
 
 fun main() {
     partOne()
@@ -23,32 +23,41 @@ fun partOne() {
 fun partTwo() {
     val lines = ReadFile("day01.txt").getListOfStrings()
 
-    val numbersPairs = listOf(
-        Pair("one", "1"),
-        Pair("two", "2"),
-        Pair("three", "3"),
-        Pair("four", "4"),
-        Pair("five", "5"),
-        Pair("six", "6"),
-        Pair("seven", "7"),
-        Pair("eight", "8"),
-        Pair("nine", "9")
+    val numberMap = mapOf(
+        "one" to "1",
+        "two" to "2",
+        "three" to "3",
+        "four" to "4",
+        "five" to "5",
+        "six" to "6",
+        "seven" to "7",
+        "eight" to "8",
+        "nine" to "9"
     )
 
-    val wordList = numbersPairs.map { it.first }
-    val backwardsWordList = wordList.map { it.reversed() }
-    val numberList = numbersPairs.map { it.second }
+    val reversedNumberMap = mapOf(
+        "one".reversed() to "1",
+        "two".reversed() to "2",
+        "three".reversed() to "3",
+        "four".reversed() to "4",
+        "five".reversed() to "5",
+        "six".reversed() to "6",
+        "seven".reversed() to "7",
+        "eight".reversed() to "8",
+        "nine".reversed() to "9"
+    )
+
+    val wordList = numberMap.map { it.key }
+    val backwardsWordList = reversedNumberMap.map { it.key }
+    val numberList = numberMap.map { it.value }
     val combinedListForwards = wordList + numberList
     val combinedListBackwards = backwardsWordList + numberList
 
     val total = lines.sumOf { line ->
-        val resultGoingForwards = findNumbersAndAddToList(line, combinedListForwards).map { it.replaceNumbers() }
-        val resultGoingBackwards = findNumbersAndAddToList(line.reversed(), combinedListBackwards).map { it.replaceBackwardsNumbers() }
+        val resultGoingForwards = findNumbersAndAddToList(line, combinedListForwards).map { it.replaceNumbers(numberMap) }
+        val resultGoingBackwards = findNumbersAndAddToList(line.reversed(), combinedListBackwards).map { it.replaceNumbers(reversedNumberMap) }
 
-        val firstDigit = resultGoingForwards.first().toInt()
-        val lastDigit = resultGoingBackwards.first().toInt()
-
-        firstDigit.times(10).plus(lastDigit)
+        "${resultGoingForwards.first()}${resultGoingBackwards.first()}".toInt()
     }
 
     println(total)
@@ -65,24 +74,8 @@ fun findNumbersAndAddToList(line: String, substrings: List<String>): MutableList
     return overlappingSubstrings
 }
 
-fun String.replaceNumbers() =
-    this.replace("one", "1")
-        .replace("two", "2")
-        .replace("three", "3")
-        .replace("four", "4")
-        .replace("five", "5")
-        .replace("six", "6")
-        .replace("seven", "7")
-        .replace("eight", "8")
-        .replace("nine", "9")
-
-fun String.replaceBackwardsNumbers() =
-    this.replace("one".reversed(), "1")
-        .replace("two".reversed(), "2")
-        .replace("three".reversed(), "3")
-        .replace("four".reversed(), "4")
-        .replace("five".reversed(), "5")
-        .replace("six".reversed(), "6")
-        .replace("seven".reversed(), "7")
-        .replace("eight".reversed(), "8")
-        .replace("nine".reversed(), "9")
+fun String.replaceNumbers(numberMap: Map<String, String>): String {
+    return numberMap.entries.fold(this) { acc, (key, value) ->
+        acc.replace(key, value)
+    }
+}
