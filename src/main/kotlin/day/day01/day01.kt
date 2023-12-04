@@ -9,7 +9,7 @@ fun main() {
     partTwo()
 }
 
-fun partOne() {
+private fun partOne() {
     val lines = ReadFile("day01.txt").getListOfStrings()
 
     val combinedFirstAndLastDigitsSum = lines.sumOf { line ->
@@ -20,7 +20,7 @@ fun partOne() {
     println(combinedFirstAndLastDigitsSum)
 }
 
-fun partTwo() {
+private fun partTwo() {
     val lines = ReadFile("day01.txt").getListOfStrings()
 
     val numberMap = mapOf(
@@ -63,7 +63,7 @@ fun partTwo() {
     println(total)
 }
 
-fun findNumbersAndAddToList(line: String, substrings: List<String>): MutableList<String> {
+private fun findNumbersAndAddToList(line: String, substrings: List<String>): MutableList<String> {
     val overlappingSubstrings = mutableListOf<String>()
     val pattern = Regex(substrings.joinToString("|"))
 
@@ -74,7 +74,7 @@ fun findNumbersAndAddToList(line: String, substrings: List<String>): MutableList
     return overlappingSubstrings
 }
 
-fun String.replaceNumbers(numberMap: Map<String, String>): String {
+private fun String.replaceNumbers(numberMap: Map<String, String>): String {
     return numberMap.entries.fold(this) { acc, (key, value) ->
         acc.replace(key, value)
     }
